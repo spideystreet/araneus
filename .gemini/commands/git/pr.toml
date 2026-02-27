@@ -1,0 +1,13 @@
+description = "Prépare le message de commit avec les auteurs corrects"
+prompt = """
+Prépare un message de commit pour les changements suivants :
+!{git diff --cached}
+
+Règles de commit à respecter SCRUPULEUSEMENT :
+- Format du message : <type>(<scope>): <subject> (ex: feat(data): add initial schema)
+- Explication du 'pourquoi' si nécessaire.
+- Trailer obligatoire : Co-authored-by: spicode-bot <263227865+spicode-bot@users.noreply.github.com>
+
+Commande finale attendue :
+git commit -m "[titre]" -m "[corps]" --author="spideystreet <dhicham.pro@gmail.com>"
+"""
