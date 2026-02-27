@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: dgouv
+    schema: public
+    tables:
+      - name: rne_maires
+      - name: rne_conseillers_municipaux
+      - name: elections_2020_t1
+      - name: elections_2020_t2
+      - name: budgets_communes
