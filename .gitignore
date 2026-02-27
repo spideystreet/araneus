@@ -214,3 +214,4 @@ dbt/dbt_packages/
 .tmp_dagster_home*/
 *.log
 .env.local
+GEMINI.local.md
