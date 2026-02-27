@@ -1,0 +1,25 @@
+[project]
+name = "araneus"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "dagster",
+    "dagster-webserver",
+    "dagster-postgres",
+    "dagster-dbt",
+    "dbt-postgres",
+    "pandas",
+    "sqlalchemy",
+    "psycopg2-binary",
+    "python-dotenv"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.dagster]
+module_name = "araneus.definitions"

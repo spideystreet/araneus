@@ -1,0 +1,35 @@
+{
+  "context": {
+    "fileName": [
+      "GEMINI.md",
+      "GEMINI.local.md"
+    ],
+    "loadMemoryFromIncludeDirectories": true
+  },
+  "mcpServers": {
+    "datagouv": {
+      "httpUrl": "https://mcp.data.gouv.fr/mcp",
+      "timeout": 600000
+    },
+    "uv-docs": {
+      "command": "uvx uv-docs-mcp",
+      "timeout": 600000
+    },
+    "dagster": {
+      "command": "npx @dagster/mcp-server",
+      "timeout": 600000
+    },
+    "dbt": {
+      "command": "uvx dbt-mcp",
+      "timeout": 600000
+    }
+  },
+  "mcp": {
+    "allowed": [
+      "datagouv",
+      "uv-docs",
+      "dagster",
+      "dbt"
+    ]
+  }
+}
