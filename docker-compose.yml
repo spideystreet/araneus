@@ -1,0 +1,66 @@
+services:
+  db:
+    image: ankane/pgvector:v0.5.1
+    container_name: araneus_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  dagster_webserver:
+    image: python:3.12-slim
+    container_name: araneus_dagster_webserver
+    volumes:
+      - .:/opt/dagster/app
+    environment:
+      - DAGSTER_HOME=/opt/dagster/app/src
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        pip install dagster dagster-webserver dagster-postgres dagster-dbt dbt-postgres pandas sqlalchemy psycopg2-binary python-dotenv
+        dagster-webserver -h 0.0.0.0 -p 3000 -w /opt/dagster/app/src/workspace.yaml
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  dagster_daemon:
+    image: python:3.12-slim
+    container_name: araneus_dagster_daemon
+    volumes:
+      - .:/opt/dagster/app
+    environment:
+      - DAGSTER_HOME=/opt/dagster/app/src
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        pip install dagster dagster-webserver dagster-postgres dagster-dbt dbt-postgres pandas sqlalchemy psycopg2-binary python-dotenv
+        dagster-daemon run
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
